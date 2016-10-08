@@ -1,5 +1,6 @@
 project:
   name: example
+  deployable_in_heroku: True
   apps:
     - name: account
       models:

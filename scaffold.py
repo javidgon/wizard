@@ -18,9 +18,15 @@ main_urls_template = env.get_template('main_urls.py')
 urls_template = env.get_template('urls.py')
 api_template = env.get_template('api.py')
 admin_template = env.get_template('admin.py')
+procfile_template = env.get_template('Procfile')
+requirements_template = env.get_template('requirements.txt')
 
 # Start Scaffolding
-
+print "************************************************************************************"
+print "* Welcome to the CRUD Wizard"
+print "************************************************************************************"
+print "We are going to install Django 1.10 and Angular 1.5.4 and all the glue in between!"
+print "Doing Magic..."
 print "0) Removing previous project (if it exists)"
 
 if os.path.exists('{}'.format(project.get('name'))):
@@ -33,6 +39,18 @@ call(["django-admin", "startproject", project.get('name')])
 print "2) Setting up applications..."
 # Go inside the project.
 os.chdir(project.get('name'))
+# Configure for Heroku (if required)
+if project.get('deployable_in_heroku'):
+    f = open('Procfile', 'w')
+    print >> f, procfile_template.render(project=project)
+    f.close()
+
+# Create REQUIREMENTS.txt file
+f = open('requirements.txt', 'w')
+print >> f, requirements_template.render(
+    deployable_in_heroku=project.get('deployable_in_heroku'))
+f.close()
+
 # Connect the different applications with the main URLS.py File
 f = open('{}/urls.py'.format(project.get('name')), 'w')
 print >> f, main_urls_template.render(apps=apps)
@@ -73,5 +91,10 @@ f.close()
 
 # Go back to the parent directory.
 os.chdir('../')
-print "Done! Please check the models and if everything looks file run 'python manage.py makemigrations'"
+print "Done! In order to complete the configuration please follow the following steps:"
+print "1) Make sure that the models have been properly generated"
+print "2) If so, create migrations by running 'python manage.py makemigrations'"
+print "3) Apply migrations by running 'python manage.py migrate'"
+print "4) Create a superuser using 'python manage.py shell'"
+print "5) Enjoy!"
 
