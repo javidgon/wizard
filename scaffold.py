@@ -17,11 +17,14 @@ models_template = env.get_template('models.py')
 main_urls_template = env.get_template('main_urls.py')
 urls_template = env.get_template('urls.py')
 api_template = env.get_template('api.py')
+admin_template = env.get_template('admin.py')
 
 # Start Scaffolding
 
 print "0) Removing previous project (if it exists)"
-shutil.rmtree('{}'.format(project.get('name')))
+
+if os.path.exists('{}'.format(project.get('name'))):
+    shutil.rmtree('{}'.format(project.get('name')))
 
 print "1) Creating {} Project...".format(project.get('name'))
 call(["django-admin", "startproject", project.get('name')])
@@ -50,12 +53,16 @@ for app in apps:
     print >> f, api_template.render(app=app)
     f.close()
 
+    f = open('{}/admin.py'.format(app.get('name')), 'w')
+    print >> f, admin_template.render(models=app.get('models'))
+    f.close()
+
 # Add added applications to the SETTINGS.py file
 
 new_settings_file = ''
 for line in open("{}/settings.py".format(project.get('name'))).readlines():
     new_settings_file += line
-    if line.startswith("INSTALLED_APPS = ["):
+    if line.startswith("    'django.contrib.staticfiles'"):
         for app in apps:
             new_settings_file += "    '{}.apps.{}Config',\n".format(
                 app.get('name'), app.get('name').capitalize())
@@ -66,5 +73,5 @@ f.close()
 
 # Go back to the parent directory.
 os.chdir('../')
-print "Done!"
+print "Done! Please check the models and if everything looks file run 'python manage.py makemigrations'"
 

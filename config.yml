@@ -1,38 +1,72 @@
 project:
   name: example
   apps:
-    - name: accounts
+    - name: account
       models:
         - name: User
-          str: self.name, self.surname
-          fields:
+          str:
             - name
             - surname
-            - age
-            - created_at
+          fields:
+            - name:
+              - char
+            - email:
+              - email
+              - unique
+            - surname:
+              - char
+            - age:
+              - int
+            - created_at:
+              - datetime
+            - last_login:
+              - datetime
         - name: Admin
-          str: self.name, self.surname
+          str:
+            - name
+            - surname
           fields:
-            - user
-            - rights
-            - access_level
-    - name: rooms
+            - user:
+              - foreign
+            - rights:
+              - char
+            - access_level:
+              - int
+    - name: location
       models:
-        - name: Room
-          str: self.name, self.campus
-          fields:
-            - name
-            - floor
-            - campus
-        - name: Campus
-          str: self.name, self.city
-          fields:
-            - name
-            - rating
-            - city
         - name: City
-          str: self.name, self.country
+          str:
+          - name
+          - country
           fields:
-            - name
-            - population
-            - country
+            - name:
+              - char
+              - unique
+            - population:
+              - int
+            - country:
+              - char
+        - name: Campus
+          str:
+          - name
+          - city
+          fields:
+            - name:
+              - char
+              - unique
+            - rating:
+              - char
+            - city:
+              - foreign
+        - name: Room
+          str:
+          - name
+          - campus
+          fields:
+            - name:
+              - char
+              - unique
+            - floor:
+              - int
+            - campus:
+              - foreign

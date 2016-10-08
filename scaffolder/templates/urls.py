@@ -1,7 +1,8 @@
+from __future__ import unicode_literals
+
 from django.conf.urls import include, url
 
-{% for model in app.models %}from .api import {{model.name}}Api
-{% endfor %}
+from .api import {% for model in app.models %}{{ model.name | capitalize }}Api{% if not loop.last %}, {% endif %}{% endfor %}
 
 app_name = '{{ app.name }}'
 urlpatterns = [
