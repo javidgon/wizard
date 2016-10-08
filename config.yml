@@ -1,0 +1,38 @@
+project:
+  name: example
+  apps:
+    - name: accounts
+      models:
+        - name: User
+          str: self.name, self.surname
+          fields:
+            - name
+            - surname
+            - age
+            - created_at
+        - name: Admin
+          str: self.name, self.surname
+          fields:
+            - user
+            - rights
+            - access_level
+    - name: rooms
+      models:
+        - name: Room
+          str: self.name, self.campus
+          fields:
+            - name
+            - floor
+            - campus
+        - name: Campus
+          str: self.name, self.city
+          fields:
+            - name
+            - rating
+            - city
+        - name: City
+          str: self.name, self.country
+          fields:
+            - name
+            - population
+            - country
