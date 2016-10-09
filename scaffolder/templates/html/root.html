@@ -11,7 +11,7 @@
     <!-- The next SCRIPT should be removed in Production. It's only intended for Development -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.7.1/less.min.js"></script>
 </head>
-<body ng-app="mainApp">
+<body ng-app="mainApp" layout="column">
 <div ng-view></div>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
@@ -22,8 +22,8 @@
 <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-resource/1.5.8/angular-resource.min.js"></script>
 
-<script type="text/javascript" src="{% static "services.js" %}"></script>
-<script type="text/javascript" src="{% static "controllers.js" %}"></script>
-<script type="text/javascript" src="{% static "app.js" %}"></script>
+<script type="text/javascript" src="{% static "js/services.js" %}"></script>
+<script type="text/javascript" src="{% static "js/controllers.js" %}"></script>
+<script type="text/javascript" src="{% static "js/app.js" %}"></script>
 </body>
 </html>
