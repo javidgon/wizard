@@ -11,28 +11,35 @@ project:
           fields:
             - name:
               - char
+              - notnull
             - email:
               - email
               - unique
+              - notnull
             - surname:
               - char
+              - notnull
             - age:
               - int
             - created_at:
               - datetime
+              - auto_now_add
             - last_login:
               - datetime
+              - auto_now
         - name: Admin
           str:
-            - name
-            - surname
+            - user
+            - access_level
           fields:
             - user:
               - foreign
+              - notnull
             - rights:
               - char
             - access_level:
               - int
+              - notnull
     - name: location
       models:
         - name: City
@@ -43,10 +50,13 @@ project:
             - name:
               - char
               - unique
+              - notnull
             - population:
               - int
+              - notnull
             - country:
               - char
+              - notnull
         - name: Campus
           str:
           - name
@@ -55,10 +65,12 @@ project:
             - name:
               - char
               - unique
+              - notnull
             - rating:
               - char
             - city:
               - foreign
+              - notnull
         - name: Room
           str:
           - name
@@ -67,7 +79,10 @@ project:
             - name:
               - char
               - unique
+              - notnull
             - floor:
               - int
+              - notnull
             - campus:
               - foreign
+              - notnull

@@ -13,20 +13,20 @@ apps = project.get('apps')
 env = Environment(loader=PackageLoader('scaffolder', 'templates'))
 
 # Load Templates
-models_template = env.get_template('models.py')
-main_urls_template = env.get_template('main_urls.py')
-urls_template = env.get_template('urls.py')
-api_template = env.get_template('api.py')
-admin_template = env.get_template('admin.py')
-procfile_template = env.get_template('Procfile')
-requirements_template = env.get_template('requirements.txt')
+models_template = env.get_template('django/models.py')
+main_urls_template = env.get_template('django/main_urls.py')
+urls_template = env.get_template('django/urls.py')
+api_template = env.get_template('django/api.py')
+admin_template = env.get_template('django/admin.py')
+# tests_template = env.get_template('django/tests.py')
+procfile_template = env.get_template('heroku/Procfile')
+requirements_template = env.get_template('django/requirements.txt')
 
 # Start Scaffolding
 print "************************************************************************************"
-print "* Welcome to the CRUD Wizard"
+print "* Welcome to the CRUD Wizard v0.1"
 print "************************************************************************************"
-print "We are going to install Django 1.10 and Angular 1.5.4 and all the glue in between!"
-print "Doing Magic..."
+print "INFO: We are going to install Django 1.10 and Angular 1.5.4 and set up automatically all the glue in between!"
 print "0) Removing previous project (if it exists)"
 
 if os.path.exists('{}'.format(project.get('name'))):
@@ -60,7 +60,7 @@ for app in apps:
     call(["python", "manage.py", 'startapp', app.get('name')])
 
     f = open('{}/models.py'.format(app.get('name')), 'w')
-    print >> f, models_template.render(models=app.get('models'))
+    print >> f, models_template.render(app=app)
     f.close()
 
     f = open('{}/urls.py'.format(app.get('name')), 'w')
@@ -74,6 +74,10 @@ for app in apps:
     f = open('{}/admin.py'.format(app.get('name')), 'w')
     print >> f, admin_template.render(models=app.get('models'))
     f.close()
+
+    # f = open('{}/tests.py'.format(app.get('name')), 'w')
+    # print >> f, tests_template.render(app=app)
+    # f.close()
 
 # Add added applications to the SETTINGS.py file
 
