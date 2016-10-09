@@ -18,8 +18,11 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
+from .views import index
+
 
 urlpatterns = [
+    url(r'^$', index),
     {% for app in apps %}url(r'^api/v1/{{ app.name | lower }}/', include('{{ app.name | lower }}.urls')),
     {% endfor %}
     url(r'^admin/', admin.site.urls),

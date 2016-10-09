@@ -13,14 +13,27 @@ apps = project.get('apps')
 env = Environment(loader=PackageLoader('scaffolder', 'templates'))
 
 # Load Templates
+
+# Django
 models_template = env.get_template('django/models.py')
 main_urls_template = env.get_template('django/main_urls.py')
+main_views_template = env.get_template('django/main_views.py')
 urls_template = env.get_template('django/urls.py')
 api_template = env.get_template('django/api.py')
 admin_template = env.get_template('django/admin.py')
 # tests_template = env.get_template('django/tests.py')
-procfile_template = env.get_template('heroku/Procfile')
 requirements_template = env.get_template('django/requirements.txt')
+
+# Heroku
+procfile_template = env.get_template('heroku/Procfile')
+
+# Templates
+# index_html_template = env.get_template('html/index.html')
+
+# Statics
+app_static_template = env.get_template('static/app.js')
+services_static_template = env.get_template('static/services.js')
+controllers_static_template = env.get_template('static/controllers.js')
 
 # Start Scaffolding
 print "************************************************************************************"
@@ -51,6 +64,36 @@ print >> f, requirements_template.render(
     deployable_in_heroku=project.get('deployable_in_heroku'))
 f.close()
 
+# Create Main Template structure
+templates_path = '{}/templates'.format(project.get('name'))
+if not os.path.exists(templates_path):
+    os.makedirs(templates_path)
+
+# Create INDEX.html & main VIEWS.py File
+shutil.copy(os.path.dirname(os.path.realpath(__file__)) + '/../' +
+            'scaffolder/templates/html/index.html', '{}/index.html'.format(templates_path))
+
+f = open('{}/views.py'.format(project.get('name')), 'w')
+print >> f, main_views_template.render(apps=apps)
+f.close()
+
+# Create Main Static structure
+static_path = '{}/static'.format(project.get('name'))
+if not os.path.exists(static_path):
+    os.makedirs(static_path)
+
+f = open('{}/app.js'.format(static_path), 'w')
+print >> f, app_static_template.render()
+f.close()
+
+f = open('{}/services.js'.format(static_path), 'w')
+print >> f, services_static_template.render(apps=apps)
+f.close()
+
+f = open('{}/controllers.js'.format(static_path), 'w')
+print >> f, controllers_static_template.render(apps=apps)
+f.close()
+
 # Connect the different applications with the main URLS.py File
 f = open('{}/urls.py'.format(project.get('name')), 'w')
 print >> f, main_urls_template.render(apps=apps)
@@ -58,6 +101,16 @@ f.close()
 
 for app in apps:
     call(["python", "manage.py", 'startapp', app.get('name')])
+
+    # Create Template structure
+    templates_path = '{}/templates'.format(app.get('name'))
+    if not os.path.exists(templates_path):
+        os.makedirs(templates_path)
+
+    # Create Static structure
+    static_path = '{}/static'.format(app.get('name'))
+    if not os.path.exists(static_path):
+        os.makedirs(static_path)
 
     f = open('{}/models.py'.format(app.get('name')), 'w')
     print >> f, models_template.render(app=app)
@@ -80,7 +133,6 @@ for app in apps:
     # f.close()
 
 # Add added applications to the SETTINGS.py file
-
 new_settings_file = ''
 for line in open("{}/settings.py".format(project.get('name'))).readlines():
     new_settings_file += line
@@ -88,12 +140,13 @@ for line in open("{}/settings.py".format(project.get('name'))).readlines():
         for app in apps:
             new_settings_file += "    '{}.apps.{}Config',\n".format(
                 app.get('name'), app.get('name').capitalize())
+        new_settings_file += "    '{}',\n".format(project.get('name'))
 
 f = open('{}/settings.py'.format(project.get('name')), 'w')
 print >> f, new_settings_file
 f.close()
 
-# Go back to the parent directory.
+# Go back to the parent directory
 os.chdir('../')
 print "Done! In order to complete the configuration please follow the following steps:"
 print "1) Make sure that the models have been properly generated"

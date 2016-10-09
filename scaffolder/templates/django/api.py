@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from django.views.decorators.csrf import csrf_exempt
 from django.views import View
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponse
@@ -14,7 +15,7 @@ from .models import {% for model in app.models %}{{ model.name }}{% if not loop.
             return JsonResponse({{ model.name | lower }}.to_dict())
         {{model.name | lower}}s = {{ model.name }}.objects.all()
         resp = [{{ model.name | lower }}.to_dict for {{ model.name | lower }} in {{ model.name | lower }}s]
-        return JsonResponse(resp)
+        return JsonResponse(resp, safe=False)
 
     def post(self, request, {{ model.name | lower }}_id=None, *args, **kwargs):
         if not {{ model.name | lower }}_id:
@@ -23,7 +24,7 @@ from .models import {% for model in app.models %}{{ model.name }}{% if not loop.
         {{ model.name | lower }} = {{ model.name }}.objects.create(
             {% for field in model.fields %}{% for name, props in field.iteritems() %}{{ name }}=request.POST.get('{{ name }}'),{% endfor %}
             {% endfor %})
-        return JsonResponse({{ model.name | lower }}.to_dict())
+        return JsonResponse({{ model.name | lower }}.to_dict(), safe=False)
 
     def put(self, request, {{ model.name | lower }}_id=None, *args, **kwargs):
         if not {{ model.name | lower }}_id:
@@ -33,7 +34,7 @@ from .models import {% for model in app.models %}{{ model.name }}{% if not loop.
         {{ model.name | lower}} = {{ model.name }}.objects.update(
             {% for field in model .fields %}{% for name, props in field.iteritems() %}{{ name }}=request.POST.get('{{ name }}'),{% endfor %}
             {% endfor %})
-        return JsonResponse({{ model.name | lower }}.to_dict())
+        return JsonResponse({{ model.name | lower }}.to_dict(), safe=False)
 
     def delete(self, request, {{ model.name | lower }}_id=None, *args, **kwargs):
         if not {{ model.name | lower }}_id:
