@@ -27,13 +27,11 @@ requirements_template = env.get_template('django/requirements.txt')
 # Heroku
 procfile_template = env.get_template('heroku/Procfile')
 
-# Templates
-# index_html_template = env.get_template('html/index.html')
-
 # Statics
 app_static_template = env.get_template('static/app.js')
 services_static_template = env.get_template('static/services.js')
 controllers_static_template = env.get_template('static/controllers.js')
+
 
 # Start Scaffolding
 print "************************************************************************************"
@@ -64,14 +62,23 @@ print >> f, requirements_template.render(
     deployable_in_heroku=project.get('deployable_in_heroku'))
 f.close()
 
-# Create Main Template structure
+# Create Django Template structure
 templates_path = '{}/templates'.format(project.get('name'))
 if not os.path.exists(templates_path):
     os.makedirs(templates_path)
 
 # Create INDEX.html & main VIEWS.py File
 shutil.copy(os.path.dirname(os.path.realpath(__file__)) + '/../' +
-            'scaffolder/templates/html/index.html', '{}/index.html'.format(templates_path))
+            'scaffolder/templates/html/root.html', '{}/root.html'.format(templates_path))
+
+# Create Angular Template structure
+angular_templates_path = '{}/static/partials'.format(project.get('name'))
+if not os.path.exists(angular_templates_path):
+    os.makedirs(angular_templates_path)
+
+# Create HOME.html that is going to be served by Angular.js
+shutil.copy(os.path.dirname(os.path.realpath(__file__)) + '/../' +
+            'scaffolder/templates/static/partials/home.html', '{}/home.html'.format(angular_templates_path))
 
 f = open('{}/views.py'.format(project.get('name')), 'w')
 print >> f, main_views_template.render(apps=apps)
@@ -98,6 +105,15 @@ f.close()
 f = open('{}/urls.py'.format(project.get('name')), 'w')
 print >> f, main_urls_template.render(apps=apps)
 f.close()
+
+# Create Main Less folder structure
+less_static_path = '{}/static/less'.format(project.get('name'))
+if not os.path.exists(less_static_path):
+    os.makedirs(less_static_path)
+
+# Create HOME.html that is going to be served by Angular.js
+shutil.copy(os.path.dirname(os.path.realpath(__file__)) + '/../' +
+            'scaffolder/templates/static/less/styles.less', '{}/styles.less'.format(less_static_path))
 
 for app in apps:
     call(["python", "manage.py", 'startapp', app.get('name')])
