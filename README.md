@@ -1,12 +1,18 @@
 # Wizard: Angular.js &amp; Django Scaffolding Tool
 
 ## 1) Introduction
-Let's face it, nobody likes to create the same old App Skeleton everytime you want to start off a new Prototype. It's even worse
-when you have to connect a Frontend Framework (e.g `Angular.js`) with a Backend (e.g `Django`). Several hours can be wasted if you are lucky, otherwise it could be days.
+Let's face it, **nobody likes to create the same CRUD App Skeleton for each new Prototype**. It's even worse when you have to connect a Frontend Framework (e.g `Angular.js`) with a Backend (e.g `Django`) for configuring API stuff. Several hours can be wasted if you are lucky, otherwise it could be days.
 
-`Wizard` comes to fill this gap. You can create a Angular.js(1.5.8) & Django(1.10) skeleton in minutes, including DB Models! You just need to create a `config.yml` file with some configuration and `Wizard` will do the rest for you.
+`Wizard` comes to fill this gap. It configures in a few seconds the following CRUD Stack (including statics' tools and DB Models!), so you can focus solely on your application logic:
+ 
+ * 1) Angular 1.5.8
+ * 2) Angular Material 1.1.0
+ * 3) Django 1.10
+ * 4) Less.js
 
-`config.yml`:
+You just need to create a `config.example.yml` file with some configuration (following `Automatic Generation Rules`, please see next Sections) and `Wizard` will do the rest for you.
+
+E.g `config.example.yml`:
 
 ```yml
 project:
@@ -27,30 +33,9 @@ project:
               - email
               - unique
               - notnull
-            - surname:
-              - char
-              - notnull
-            - age:
-              - int
             - created_at:
               - datetime
               - auto_now_add
-            - last_login:
-              - datetime
-              - auto_now
-        - name: Admin
-          str:
-            - user
-            - access_level
-          fields:
-            - user:
-              - foreign
-              - notnull
-            - rights:
-              - char
-            - access_level:
-              - int
-              - notnull
     - name: location
       models:
         - name: City
@@ -82,25 +67,10 @@ project:
             - city:
               - foreign
               - notnull
-        - name: Room
-          str:
-          - name
-          - campus
-          fields:
-            - name:
-              - char
-              - unique
-              - notnull
-            - floor:
-              - int
-              - notnull
-            - campus:
-              - foreign
-              - notnull
 ```
 
-Will be transformed in several fully working `models.py`, `api.py`, `urls.py`, `views.py`... files per each application. It simply works.
-At the same time it generates a Full REST API for each model! And configures the frontend to easily connect to it.
+Will be transformed in a complete Django Backend (`models.py`, `api.py`, `urls.py`, `views.py`... per application). It simply works.
+At the same time it generates a Full CRUD REST API (Create, Read, Update and Delete) for each model! And configures Angular.js to easily access to them using Services.
 
 ```
 ├── account
@@ -108,30 +78,40 @@ At the same time it generates a Full REST API for each model! And configures the
 │   ├── api.py
 │   ├── apps.py
 │   ├── __init__.py
+│   ├── migrations
+│   │   └── __init__.py
 │   ├── models.py
 │   ├── static
 │   ├── templates
 │   ├── tests.py
 │   ├── urls.py
 │   └── views.py
-├── db.sqlite3
-├── myproject
+├── example
 │   ├── __init__.py
+│   ├── __init__.pyc
 │   ├── settings.py
+│   ├── settings.pyc
 │   ├── static
-│   │   ├── app.js
-│   │   ├── controllers.js
-│   │   └── services.js
+│   │   ├── js
+│   │   │   ├── app.js
+│   │   │   ├── controllers.js
+│   │   │   └── services.js
+│   │   ├── less
+│   │   │   └── styles.less
+│   │   └── partials
+│   │       └── home.html
 │   ├── templates
-│   │   └── index.html
+│   │   └── root.html
 │   ├── urls.py
 │   ├── views.py
-│   ├── wsgi.py
+│   └── wsgi.py
 ├── location
 │   ├── admin.py
 │   ├── api.py
 │   ├── apps.py
 │   ├── __init__.py
+│   ├── migrations
+│   │   └── __init__.py
 │   ├── models.py
 │   ├── static
 │   ├── templates
@@ -139,7 +119,6 @@ At the same time it generates a Full REST API for each model! And configures the
 │   ├── urls.py
 │   └── views.py
 ├── manage.py
-├── Procfile
 └── requirements.txt
 ```
 
@@ -147,10 +126,38 @@ At the same time it generates a Full REST API for each model! And configures the
 
 * 1) `git clone https://github.com/javidgon/wizard.git`
 * 2) `pip install -r requirements.txt`
-* 3) Create `config.yml` (You can use `config.example.yml` if you rename it)
+* 3) Create `config.example.yml` (You rename `config.example.yml` if you want)
 * 4) `cd wizard && python scaffold.py`
 
-## 3) What does it not do?
+## 3) Automatic Model Generation Options available.
+As we saw in the first section, it's possible to generate the models (and the full Django backend) based on a `.yml` configuration file. Please use the following rules to set the `Field` type and all its `Parameters`.
+
+#### Fields' Generation Rules
+
+* `char` --> `CharField`
+* `int` --> `IntegerField`
+* `float` --> `FloatField`
+* `date` --> `DateField`
+* `datetime` --> `DatetimeField`
+* `email` --> `EmailField`
+* `boolean` --> `BooleanField`
+* `foreign` --> `ForeignKey`
+* `manytomany` --> `ManyToManyField`
+
+
+#### Parameters' Generation Rules
+
+* `unique` --> `unique=True`
+* `notunique` --> `unique=False`
+* `blank` --> `blank=True`
+* `notblank` --> `blank=False`
+* `null` --> `null=True`
+* `notnull` --> `null=False`
+* `auto_now` --> `auto_now=True`
+* `auto_now_add` --> `auto_now_add=True`
+
+
+## 4) What does it not do?
 
 * It's not intended for Production, only for Prototyping. So only DEV Settings are configured (meaning unsecure).
 * It doesn't set up an Authentication system by default.
@@ -158,15 +165,12 @@ At the same time it generates a Full REST API for each model! And configures the
 * It doesn't support complex Field parameters in Django models. Only the most common parameters are supported. You can always edit them manually, so no problem there.
 * It doesn't create a full frontend tooling ecosystem (e.g `Grunt`, `Bower`...) as this is not the purpose. But you can add it afterwards of course.
 
-## 4) TODO
+## 5) TODO
 
 * Support proper `pluralization` in jinja2 templates
-* Create a routing system inside Angular.js frontend
 * Improve frontend page (make it nicer)
-* Finish Heroku integration
-* Structure better the `scaffold.py` file
 * Add tests to the resulting Backend project
 
-## 5) LICENSE
+## 6) LICENSE
 
 MIT

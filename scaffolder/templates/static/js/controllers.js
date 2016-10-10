@@ -1,6 +1,7 @@
 var Controllers = angular.module('Controllers', ['Services']);
 
 Controllers.controller('MainController', function MainController($scope) {
+  /* Feel free to replace this placeholder content! */
   $scope.entries = [
     {
       name: 'Nexus S',
@@ -10,8 +11,10 @@ Controllers.controller('MainController', function MainController($scope) {
       name: 'MOTOROLA XOOM',
     }
   ];
-});{% for app in apps %}
-{% for model in app.models %}
+});
+/* If you need Controllers for your Resources, you can uncomment them out.
+
+{% for app in apps %}{% for model in app.models %}
 Controllers.controller('{{ model.name }}Controller', function {{ model.name }}Controller($scope, {{ model.name }}) {
 
   // Generic GET (list)
@@ -36,4 +39,4 @@ Controllers.controller('{{ model.name }}Controller', function {{ model.name }}Co
   });
 
 });{% endfor %}
-{% endfor %}
+{% endfor %}*/

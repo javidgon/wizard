@@ -1,6 +1,5 @@
 project:
   name: example
-  deployable_in_heroku: True
   apps:
     - name: account
       models:
@@ -16,30 +15,9 @@ project:
               - email
               - unique
               - notnull
-            - surname:
-              - char
-              - notnull
-            - age:
-              - int
             - created_at:
               - datetime
               - auto_now_add
-            - last_login:
-              - datetime
-              - auto_now
-        - name: Admin
-          str:
-            - user
-            - access_level
-          fields:
-            - user:
-              - foreign
-              - notnull
-            - rights:
-              - char
-            - access_level:
-              - int
-              - notnull
     - name: location
       models:
         - name: City
@@ -69,20 +47,5 @@ project:
             - rating:
               - char
             - city:
-              - foreign
-              - notnull
-        - name: Room
-          str:
-          - name
-          - campus
-          fields:
-            - name:
-              - char
-              - unique
-              - notnull
-            - floor:
-              - int
-              - notnull
-            - campus:
               - foreign
               - notnull

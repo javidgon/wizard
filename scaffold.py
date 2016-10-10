@@ -89,6 +89,22 @@ def setup_main_django_app(project):
     print >> f, new_settings_file
     f.close()
 
+    if project.get('deployable_in_heroku'):
+        new_settings_file = ''
+        for line in open("{}/settings.py".format(project.get('name'))).readlines():
+            new_settings_file += line
+            if line.startswith("    'django.contrib.messages',"):
+                new_settings_file += "    'whitenoise.runserver_nostatic',\n"
+            elif line.startswith("    'django.middleware.security.SecurityMiddleware',"):
+                new_settings_file += "    'whitenoise.middleware.WhiteNoiseMiddleware',\n"
+            elif line.startswith("STATIC_URL = '/static/'"):
+                new_settings_file += "STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'\n"
+                new_settings_file += "STATIC_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'staticfiles')\n"
+
+    f = open('{}/settings.py'.format(project.get('name')), 'w')
+    print >> f, new_settings_file
+    f.close()
+
 
 def setup_django_apps(apps):
     for app in apps:
@@ -126,7 +142,7 @@ def setup_django_apps(apps):
 
 if __name__ == '__main__':
     # Load Configuration
-    config = yaml.load(file('config.yml', 'r'))
+    config = yaml.load(file('config.example.yml', 'r'))
     project = config.get('project')
     apps = project.get('apps')
 
@@ -157,7 +173,7 @@ if __name__ == '__main__':
     print "************************************************************************************"
     print "* Welcome to the CRUD Wizard v0.1"
     print "************************************************************************************"
-    print "Installing Django 1.10 and Angular 1.5.4!"
+    print "Configuring Django 1.10, Angular 1.5.8 and Angular Material 1.1.0!"
     print "0) Removing previous project (if exists)"
 
     if os.path.exists('{}'.format(project.get('name'))):

@@ -6,6 +6,8 @@ var mainApp = angular.module('mainApp', ['Services', 'Controllers', 'ngResource'
     $httpProvider.defaults.xsrfCookieName = 'csrftoken';
     $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
 
+    /* You can write your own routes here! */
+    /* Take a look at these routes as an example.*/
     $routeProvider.
         when('/', {
             templateUrl: '/static/partials/home.html',

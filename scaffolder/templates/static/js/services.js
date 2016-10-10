@@ -1,7 +1,6 @@
 var Services = angular.module('Services', ['ngResource']);
 
-{% for app in apps %}
-// Services for {{ app.name }}
+{% for app in apps %}// Services for {{ app.name }}
 {% for model in app.models %}
 Services.factory('{{ model.name }}', ['$resource',
     function($resource) {
