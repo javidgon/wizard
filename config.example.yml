@@ -3,17 +3,16 @@ project:
   apps:
     - name: account
       models:
-        - name: User
+        - name: Member
           str:
-            - name
-            - surname
+            - access_level
+            - created_at
           fields:
-            - name:
-              - char
+            - user:
+              - foreign
               - notnull
-            - email:
-              - email
-              - unique
+            - access_level:
+              - int
               - notnull
             - created_at:
               - datetime

@@ -72,7 +72,11 @@ def setup_main_django_app(project):
     f.close()
 
     f = open('{}/views.py'.format(project.get('name')), 'w')
-    print >> f, main_views_template.render(apps=apps)
+    print >> f, main_views_template.render()
+    f.close()
+
+    f = open('{}/forms.py'.format(project.get('name')), 'w')
+    print >> f, main_forms_template.render()
     f.close()
 
     # Add added applications to the SETTINGS.py file
@@ -132,6 +136,10 @@ def setup_django_apps(apps):
         print >> f, api_template.render(app=app)
         f.close()
 
+        f = open('{}/forms.py'.format(app.get('name')), 'w')
+        print >> f, forms_template.render(app=app)
+        f.close()
+
         f = open('{}/admin.py'.format(app.get('name')), 'w')
         print >> f, admin_template.render(models=app.get('models'))
         f.close()
@@ -142,7 +150,7 @@ def setup_django_apps(apps):
 
 if __name__ == '__main__':
     # Load Configuration
-    config = yaml.load(file('config.example.yml', 'r'))
+    config = yaml.load(file('config.yml', 'r'))
     project = config.get('project')
     apps = project.get('apps')
 
@@ -152,11 +160,13 @@ if __name__ == '__main__':
     # Load Templates
 
     # Django
-    models_template = env.get_template('django/models.py')
     main_urls_template = env.get_template('django/main_urls.py')
     main_views_template = env.get_template('django/main_views.py')
+    main_forms_template = env.get_template('django/main_forms.py')
+    models_template = env.get_template('django/models.py')
     urls_template = env.get_template('django/urls.py')
     api_template = env.get_template('django/api.py')
+    forms_template = env.get_template('django/forms.py')
     admin_template = env.get_template('django/admin.py')
     # tests_template = env.get_template('django/tests.py')
     requirements_template = env.get_template('django/requirements.txt')
@@ -201,4 +211,3 @@ if __name__ == '__main__':
     print "4) Create a superuser using 'python manage.py shell'"
     print "5) Install dependencies by running 'pip install -r requirements.txt'"
     print "6) Enjoy!"
-

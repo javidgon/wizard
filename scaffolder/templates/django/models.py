@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+# This is always imported as Models might use it.
+from django.contrib.auth.models import User
 from django.db import models{% for model in app.models %}
 
 
