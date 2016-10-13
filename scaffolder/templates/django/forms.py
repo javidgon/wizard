@@ -8,4 +8,6 @@ from .models import {% for model in app.models %}{{ model.name }}{% if not loop.
 class {{ model.name }}Form(ModelForm):
     class Meta:
         model = {{ model.name }}
-        fields = [{% for field in model.fields %}{% for name, props in field.iteritems() %}'{{ name }}', {% endfor %}{% endfor %}]{% endfor %}
+        fields = '__all__'
+
+{% endfor %}

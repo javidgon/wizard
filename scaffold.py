@@ -79,6 +79,10 @@ def setup_main_django_app(project):
     print >> f, main_forms_template.render()
     f.close()
 
+    f = open('{}/models.py'.format(project.get('name')), 'w')
+    print >> f, main_models_template.render(project=project)
+    f.close()
+
     # Add added applications to the SETTINGS.py file
     new_settings_file = ''
     for line in open("{}/settings.py".format(project.get('name'))).readlines():
@@ -125,7 +129,7 @@ def setup_django_apps(apps):
             os.makedirs(static_path)
 
         f = open('{}/models.py'.format(app.get('name')), 'w')
-        print >> f, models_template.render(app=app)
+        print >> f, models_template.render(project=project, app=app)
         f.close()
 
         f = open('{}/urls.py'.format(app.get('name')), 'w')
@@ -163,6 +167,7 @@ if __name__ == '__main__':
     main_urls_template = env.get_template('django/main_urls.py')
     main_views_template = env.get_template('django/main_views.py')
     main_forms_template = env.get_template('django/main_forms.py')
+    main_models_template = env.get_template('django/main_models.py')
     models_template = env.get_template('django/models.py')
     urls_template = env.get_template('django/urls.py')
     api_template = env.get_template('django/api.py')
@@ -181,7 +186,7 @@ if __name__ == '__main__':
 
     # Start Scaffolding
     print "************************************************************************************"
-    print "* Welcome to the CRUD Wizard v0.1"
+    print "* Welcome to the CRUD Wizard v0.2"
     print "************************************************************************************"
     print "Configuring Django 1.10, Angular 1.5.8 and Angular Material 1.1.0!"
     print "0) Removing previous project (if exists)"
@@ -204,10 +209,10 @@ if __name__ == '__main__':
 
     # Go back to the parent directory
     os.chdir('../')
-    print "Done! In order to complete the configuration please follow the following steps:"
+    print "Done! In order to complete the Project's configuration please follow the following steps:"
     print "1) Make sure that the models have been properly generated"
-    print "2) If so, create migrations by running 'python manage.py makemigrations'"
-    print "3) Apply migrations by running 'python manage.py migrate'"
-    print "4) Create a superuser using 'python manage.py shell'"
-    print "5) Install dependencies by running 'pip install -r requirements.txt'"
+    print "2) Install dependencies by running 'pip install -r requirements.txt'"
+    print "3) If so, create migrations by running 'python manage.py makemigrations'"
+    print "4) Apply those migrations by running 'python manage.py migrate'"
+    print "5) Create a superuser using 'python manage.py shell'"
     print "6) Enjoy!"

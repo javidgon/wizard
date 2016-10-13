@@ -4,7 +4,7 @@ project:
     - name: account
       models:
         - name: Member
-          str:
+          unicode:
             - access_level
             - created_at
           fields:
@@ -20,7 +20,7 @@ project:
     - name: location
       models:
         - name: City
-          str:
+          unicode:
           - name
           - country
           fields:
@@ -35,7 +35,7 @@ project:
               - char
               - notnull
         - name: Campus
-          str:
+          unicode:
           - name
           - city
           fields:

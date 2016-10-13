@@ -3,43 +3,51 @@
 ## 1) Introduction
 Let's face it, **nobody likes to create the same CRUD App Skeleton for each new Prototype**. It's even worse when you have to connect a Frontend Framework (e.g `Angular.js`) with a Backend (e.g `Django`) for configuring API stuff. Several hours can be wasted if you are lucky, otherwise it could be days.
 
-`Wizard` comes to fill this gap. It configures in a few seconds the following CRUD Stack (including statics' tools and DB Models!), so you can focus solely on your application logic:
+`Wizard` comes to fill this gap. It configures in a few seconds the following CRUD Stack (including statics' tools and DB Models!):
  
  * 1) Angular 1.5.8
  * 2) Angular Material 1.1.0
  * 3) Django 1.10
- * 4) Less.js
 
-You just need to create a `config.example.yml` file with some configuration (following `Automatic Generation Rules`, please see next Sections) and `Wizard` will do the rest for you.
+So you can focus solely on your application logic!
 
-E.g `config.example.yml`:
+## 2) Features
+
+* Full Django Backend (including Models) and Frontend glue with Angular.js in a few seconds.
+* Basic Django User Token Authentication system configured by default.
+* Angular.js framework configuration automatically tailored to work with Django smoothly. 
+* `Automatic Generation Rules` system so models can be defined in a `.yml` file.
+
+## 3) How to get started 
+You just need to create a `config.yml` file with some configuration (following `Automatic Generation Rules`, please see next Sections) and `Wizard` will do the rest for you.
+
+E.g `config.yml`:
 
 ```yml
 project:
-  name: example
-  deployable_in_heroku: True
-  apps:
+  name: example # Your Project name
+  deployable_in_heroku: True # Do you plan to deploy to Heroku? If so, Wizard will add some settings to make it easier
+  apps: # List of Django apps
     - name: account
-      models:
-        - name: User
-          str:
-            - name
-            - surname
+      models: # List of the models defined for that app
+        - name: Member
+          unicode:
+            - user.email
+            - access_level
           fields:
-            - name:
-              - char
-              - notnull
-            - email:
-              - email
-              - unique
-              - notnull
+            - user:
+              - foreign # Field type
+              - notnull # Parameter 
+            - access_level:
+              - char # Field type
+              - notnull # Parameter
             - created_at:
               - datetime
               - auto_now_add
     - name: location
       models:
         - name: City
-          str:
+          unicode:
           - name
           - country
           fields:
@@ -54,7 +62,7 @@ project:
               - char
               - notnull
         - name: Campus
-          str:
+          unicode:
           - name
           - city
           fields:
@@ -70,63 +78,40 @@ project:
 ```
 
 Will be transformed in a complete Django Backend (`models.py`, `api.py`, `urls.py`, `views.py`... per application). It simply works.
-At the same time it generates a Full CRUD REST API (Create, Read, Update and Delete) for each model! And configures Angular.js to easily access to them using Services.
+At the same time it generates a Full CRUD REST API (Create, Read, Update and Delete) for each model!
 
+e.g `urls.py`
 ```
-├── account
-│   ├── admin.py
-│   ├── api.py
-│   ├── apps.py
-│   ├── __init__.py
-│   ├── migrations
-│   │   └── __init__.py
-│   ├── models.py
-│   ├── static
-│   ├── templates
-│   ├── tests.py
-│   ├── urls.py
-│   └── views.py
-├── example
-│   ├── __init__.py
-│   ├── __init__.pyc
-│   ├── settings.py
-│   ├── settings.pyc
-│   ├── static
-│   │   ├── js
-│   │   │   ├── app.js
-│   │   │   ├── controllers.js
-│   │   │   └── services.js
-│   │   ├── less
-│   │   │   └── styles.less
-│   │   └── partials
-│   │       └── home.html
-│   ├── templates
-│   │   └── root.html
-│   ├── urls.py
-│   ├── views.py
-│   └── wsgi.py
-├── location
-│   ├── admin.py
-│   ├── api.py
-│   ├── apps.py
-│   ├── __init__.py
-│   ├── migrations
-│   │   └── __init__.py
-│   ├── models.py
-│   ├── static
-│   ├── templates
-│   ├── tests.py
-│   ├── urls.py
-│   └── views.py
-├── manage.py
-└── requirements.txt
+app_name = 'account'
+urlpatterns = [
+
+    url(r'^members/$', MemberApi.as_view(), name='members-list'),
+    url(r'^members/(?P<member_id>[0-9]+)/$',
+        MemberApi.as_view(), name='members-detail'),
+]
 ```
 
+e.g `api.py`
+
+```
+class MemberApi(View):
+    def get(self, request, member_id=None, *args, **kwargs):
+	...
+
+    def post(self, request, member_id=None, *args, **kwargs):
+	...
+
+    def put(self, request, member_id=None, *args, **kwargs):
+	...
+
+    def delete(self, request, member_id=None, *args, **kwargs):
+	...
+```
 ## 2) Installation & Use
 
 * 1) `git clone https://github.com/javidgon/wizard.git`
 * 2) `pip install -r requirements.txt`
-* 3) Create `config.example.yml` (You rename `config.example.yml` if you want)
+* 3) Create a `config.yml` file (You can rename the `config.example.yml` file if you want)
 * 4) `cd wizard && python scaffold.py`
 
 ## 3) Automatic Model Generation Options available.
@@ -157,12 +142,12 @@ As we saw in the first section, it's possible to generate the models (and the fu
 * `auto_now_add` --> `auto_now_add=True`
 
 
-## 4) What does it not do?
+## 4) What do you need to pay attention to 
 
 * It's not intended for Production, only for Prototyping. So only DEV Settings are configured (meaning unsecure).
-* It doesn't set up an Authentication system by default.
-* It doesn't apply migrations. As it's strongly recommended that a person reviews the models before to see if they have been properly generated.
-* It doesn't support complex Field parameters in Django models. Only the most common parameters are supported. You can always edit them manually, so no problem there.
+* It doen't cover a wide range of settings, only the most common ones, so you might need to modify manually some things after the automatic generation (e.g some plurals)
+* It doesn't apply migrations. As it's a common practice that a person reviews the models first to see if they have been properly generated.
+* It doesn't support ALL `Field` parameters in the automatic Django models generation process, only the most common parameters are. Nevertheless, you can always edit them manually afterwards, so it should not be a big problem.
 * It doesn't create a full frontend tooling ecosystem (e.g `Grunt`, `Bower`...) as this is not the purpose. But you can add it afterwards of course.
 
 ## 5) TODO
@@ -170,6 +155,7 @@ As we saw in the first section, it's possible to generate the models (and the fu
 * Support proper `pluralization` in jinja2 templates
 * Improve frontend page (make it nicer)
 * Add tests to the resulting Backend project
+* Add automatic Token creation when a User is created
 
 ## 6) LICENSE
 
