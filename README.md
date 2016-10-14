@@ -1,22 +1,16 @@
 # Wizard: Angular.js &amp; Django Scaffolding Tool
 
 ## 1) Introduction
-Let's face it, **nobody likes to create the same CRUD App Skeleton for each new Prototype**. It's even worse when you have to connect a Frontend Framework (e.g `Angular.js`) with a Backend (e.g `Django`) for configuring API stuff. Several hours can be wasted if you are lucky, otherwise it could be days.
+Let's face it, **nobody likes to create the same CRUD App Skeleton for each new Project**, it takes simply too much time to start off a new prototype... We are not talking only the time consumed creating the `models`, but also the `routing`, `views`, `controllers`, `api`, `tests`, `settings`... It's even worse when you have to connect a Frontend Framework (e.g `Angular.js`) with a Backend (e.g `Django`) for configuring API endpoints. Several hours can be wasted (if you are lucky) only to make them play nicely with each other.
 
-`Wizard` comes to fill this gap. It configures in a few seconds the following CRUD Stack (including statics' tools and DB Models!):
- 
- * 1) Angular 1.5.8
- * 2) Angular Material 1.1.0
- * 3) Django 1.10
-
-So you can focus solely on your application logic!
+`Wizard` comes to fill this gap. It configures in a few seconds a `Django 1.10` project with pre-configured integration with `Angular 1.5.8`. Meaning, both frameworks will work smoothly with each other, **so you can focus solely on your application logic**.
 
 ## 2) Features
 
 * Full Django Backend (including Models) and Frontend glue with Angular.js in a few seconds.
 * Basic Django User Token Authentication system configured by default.
 * Angular.js framework configuration automatically tailored to work with Django smoothly. 
-* `Automatic Generation Rules` system so models can be defined in a `.yml` file.
+* `Automatic Generation Rules` system so models can be defined and created automatically based on a `.yml` file.
 
 ## 3) How to get started 
 You just need to create a `config.yml` file with some configuration (following `Automatic Generation Rules`, please see next Sections) and `Wizard` will do the rest for you.

@@ -186,33 +186,36 @@ if __name__ == '__main__':
 
     # Start Scaffolding
     print "************************************************************************************"
-    print "* Welcome to the CRUD Wizard v0.2"
+    print "* Welcome to Wizard: Django Scaffolding Tool v0.2"
     print "************************************************************************************"
-    print "Configuring Django 1.10, Angular 1.5.8 and Angular Material 1.1.0!"
-    print "0) Removing previous project (if exists)"
+    print "0) Removing previous project... (if exists)"
 
     if os.path.exists('{}'.format(project.get('name'))):
         shutil.rmtree('{}'.format(project.get('name')))
 
-    print "1) Creating {} Project...".format(project.get('name'))
+    print "1) Creating Django '{}' Project...".format(project.get('name'))
     call(["django-admin", "startproject", project.get('name')])
 
-    print "2) Setting up configuration..."
     # Go inside the project.
     os.chdir(project.get('name'))
 
+    print "2) Generating Project's Configuration..."
     setup_global_project_conf(project)
+    print "3) Generating Project's Templates..."
     setup_templates(project)
+    print "4) Generating Project's Statics..."
     setup_statics(project)
+    print "5) Creating Django Apps..."
     setup_django_apps(apps)
+    print "6) Installing Common Settings..."
     setup_main_django_app(project)
 
     # Go back to the parent directory
     os.chdir('../')
-    print "Done! In order to complete the Project's configuration please follow the following steps:"
-    print "1) Make sure that the models have been properly generated"
-    print "2) Install dependencies by running 'pip install -r requirements.txt'"
+    print "Done! Before running your Project please complete the following steps:"
+    print "1) Install dependencies by running 'pip install -r requirements.txt'"
+    print "2) Make sure that the models have been properly generated"
     print "3) If so, create migrations by running 'python manage.py makemigrations'"
     print "4) Apply those migrations by running 'python manage.py migrate'"
-    print "5) Create a superuser using 'python manage.py shell'"
+    print "5) Create a superuser by login into 'python manage.py shell'"
     print "6) Enjoy!"
