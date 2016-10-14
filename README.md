@@ -120,6 +120,8 @@ As we saw in the first section, it's possible to generate the models (and the fu
 #### Fields' Generation Rules
 
 * `char` --> `CharField`
+* `text` --> `TextField`
+* `url` --> `URLField`
 * `int` --> `IntegerField`
 * `float` --> `FloatField`
 * `date` --> `DateField`
@@ -142,12 +144,12 @@ As we saw in the first section, it's possible to generate the models (and the fu
 * `auto_now_add` --> `auto_now_add=True`
 
 
-## 4) What do you need to pay attention to 
+## 4) Limitations to pay attention to
 
 * It's not intended for Production, only for Prototyping. So only DEV Settings are configured (meaning unsecure).
 * It doen't cover a wide range of settings, only the most common ones, so you might need to modify manually some things after the automatic generation (e.g some plurals)
 * It doesn't apply migrations. As it's a common practice that a person reviews the models first to see if they have been properly generated.
-* It doesn't support ALL `Field` parameters in the automatic Django models generation process, only the most common parameters are. Nevertheless, you can always edit them manually afterwards, so it should not be a big problem.
+* It doesn't support ALL `Field` (e.g `JSONField`, `BinaryField`...) in the automatic Django models generation process, only the most common are. Nevertheless, you can always edit them manually afterwards, so it should not be a big problem.
 * It doesn't create a full frontend tooling ecosystem (e.g `Grunt`, `Bower`...) as this is not the purpose. But you can add it afterwards of course.
 
 ## 5) TODO
@@ -156,6 +158,7 @@ As we saw in the first section, it's possible to generate the models (and the fu
 * Improve frontend page (make it nicer)
 * Add tests to the resulting Backend project
 * Add automatic Token creation when a User is created
+* Add Automatic generation for 'choices' parameters
 
 ## 6) LICENSE
 
