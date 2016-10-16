@@ -4,19 +4,22 @@ import yaml
 import os
 import shutil
 
+def _write_rendered_file(filepath, template, **kwargs):
+    f = open(filepath, 'w')
+    print >> f, template.render(**kwargs)
+    f.close()
+
 
 def setup_global_project_conf(project):
     # Configure for Heroku (if required)
     if project.get('deployable_in_heroku'):
-        f = open('Procfile', 'w')
-        print >> f, procfile_template.render(project=project)
-        f.close()
+	_write_rendered_file('Procfile', procfile_template, project=project)
 
     # Create REQUIREMENTS.txt file
-    f = open('requirements.txt', 'w')
-    print >> f, requirements_template.render(
-        deployable_in_heroku=project.get('deployable_in_heroku'))
-    f.close()
+    _write_rendered_file(
+        'requirements.txt',
+         requirements_template,
+         deployable_in_heroku=project.get('deployable_in_heroku'))
 
 
 def setup_templates(project):
@@ -27,7 +30,8 @@ def setup_templates(project):
 
     # Create INDEX.html & main VIEWS.py File
     shutil.copy(os.path.dirname(os.path.realpath(__file__)) + '/../' +
-                'scaffolder/templates/html/root.html', '{}/root.html'.format(templates_path))
+                'scaffolder/templates/html/root.html',
+                '{}/root.html'.format(templates_path))
 
 
 def setup_statics(project):
@@ -36,17 +40,15 @@ def setup_statics(project):
     if not os.path.exists(static_path):
         os.makedirs(static_path)
 
-    f = open('{}/app.js'.format(static_path), 'w')
-    print >> f, app_static_template.render()
-    f.close()
-
-    f = open('{}/services.js'.format(static_path), 'w')
-    print >> f, services_static_template.render(apps=apps)
-    f.close()
-
-    f = open('{}/controllers.js'.format(static_path), 'w')
-    print >> f, controllers_static_template.render(apps=apps)
-    f.close()
+    _write_rendered_file('{}/app.js'.format(static_path),
+                         app_static_template,
+                         project=project)
+    _write_rendered_file('{}/services.js'.format(static_path),
+                         services_static_template,
+                         apps=apps)
+    _write_rendered_file('{}/controllers.js'.format(static_path),
+                         controllers_static_template,
+                         apps=apps)
 
     # Create Less Static structure
     less_static_path = '{}/static/less'.format(project.get('name'))
@@ -54,7 +56,8 @@ def setup_statics(project):
         os.makedirs(less_static_path)
 
     shutil.copy(os.path.dirname(os.path.realpath(__file__)) + '/../' +
-                'scaffolder/templates/static/less/styles.less', '{}/styles.less'.format(less_static_path))
+                'scaffolder/templates/static/less/styles.less',
+                '{}/styles.less'.format(less_static_path))
 
     # Create Partials Static structure
     angular_templates_path = '{}/static/partials'.format(project.get('name'))
@@ -62,26 +65,23 @@ def setup_statics(project):
         os.makedirs(angular_templates_path)
 
     shutil.copy(os.path.dirname(os.path.realpath(__file__)) + '/../' +
-                'scaffolder/templates/static/partials/home.html', '{}/home.html'.format(angular_templates_path))
+                'scaffolder/templates/static/partials/home.html',
+                '{}/home.html'.format(angular_templates_path))
 
 
 def setup_main_django_app(project):
+    project_name = project.get('name') 
     # Connect the different applications with the main URLS.py File
-    f = open('{}/urls.py'.format(project.get('name')), 'w')
-    print >> f, main_urls_template.render(apps=apps)
-    f.close()
-
-    f = open('{}/views.py'.format(project.get('name')), 'w')
-    print >> f, main_views_template.render()
-    f.close()
-
-    f = open('{}/forms.py'.format(project.get('name')), 'w')
-    print >> f, main_forms_template.render()
-    f.close()
-
-    f = open('{}/models.py'.format(project.get('name')), 'w')
-    print >> f, main_models_template.render(project=project)
-    f.close()
+    _write_rendered_file('{}/urls.py'.format(project_name),
+                         main_urls_template,
+                         apps=apps)
+    _write_rendered_file('{}/views.py'.format(project_name),
+                         main_views_template)
+    _write_rendered_file('{}/forms.py'.format(project_name),
+                         main_forms_template)
+    _write_rendered_file('{}/models.py'.format(project_name),
+                         main_models_template,
+                         project=project)
 
     # Add added applications to the SETTINGS.py file
     new_settings_file = ''
@@ -128,25 +128,23 @@ def setup_django_apps(apps):
         if not os.path.exists(static_path):
             os.makedirs(static_path)
 
-        f = open('{}/models.py'.format(app.get('name')), 'w')
-        print >> f, models_template.render(project=project, app=app)
-        f.close()
-
-        f = open('{}/urls.py'.format(app.get('name')), 'w')
-        print >> f, urls_template.render(app=app)
-        f.close()
-
-        f = open('{}/api.py'.format(app.get('name')), 'w')
-        print >> f, api_template.render(app=app)
-        f.close()
-
-        f = open('{}/forms.py'.format(app.get('name')), 'w')
-        print >> f, forms_template.render(app=app)
-        f.close()
-
-        f = open('{}/admin.py'.format(app.get('name')), 'w')
-        print >> f, admin_template.render(models=app.get('models'))
-        f.close()
+        app_name = app.get('name')
+        _write_rendered_file('{}/models.py'.format(app_name),
+                             models_template,
+                             project=project,
+                             app=app)
+        _write_rendered_file('{}/urls.py'.format(app_name),
+                             urls_template,
+                             app=app)
+        _write_rendered_file('{}/api.py'.format(app_name),
+                             api_template,
+                             app=app)
+        _write_rendered_file('{}/forms.py'.format(app_name),
+                             forms_template,
+                             app=app)
+        _write_rendered_file('{}/admin.py'.format(app_name),
+                             admin_template,
+                             models=app.get('models'))
 
         # f = open('{}/tests.py'.format(app.get('name')), 'w')
         # print >> f, tests_template.render(app=app)
@@ -185,9 +183,9 @@ if __name__ == '__main__':
     controllers_static_template = env.get_template('static/js/controllers.js')
 
     # Start Scaffolding
-    print "************************************************************************************"
+    print "*******************************************************************"
     print "* Welcome to Wizard: Django Scaffolding Tool v0.2"
-    print "************************************************************************************"
+    print "*******************************************************************"
     print "0) Removing previous project... (if exists)"
 
     if os.path.exists('{}'.format(project.get('name'))):
@@ -212,7 +210,7 @@ if __name__ == '__main__':
 
     # Go back to the parent directory
     os.chdir('../')
-    print "Done! Before running your Project please complete the following steps:"
+    print "Done! Before running your Project please do the following steps:"
     print "1) Install dependencies by running 'pip install -r requirements.txt'"
     print "2) Make sure that the models have been properly generated"
     print "3) If so, create migrations by running 'python manage.py makemigrations'"
