@@ -22,11 +22,20 @@ from .views import index, login, logout, create_user
 
 
 urlpatterns = [
-    {% for app in apps %}url(r'^api/v1/{{ app.name | lower }}/', include('{{ app.name | lower }}.urls')),
-    {% endfor %}
     url(r'^admin/', admin.site.urls),
     url(r'^login/$', login),
     url(r'^logout/$', logout),
     url(r'^create_user/$', create_user),
+
+    {% if frontend %}
+    # APIS
+    {% for app in apps %}url(r'^api/v1/{{ app.name | lower }}/', include('{{ app.name | lower }}.api_urls')),
+    {% endfor %}
     url(r'^.*$', index),
-]
+    {% else %}
+    # VIEWS
+    {% for app in apps %}url(r'{{ app.name | lower }}/', include('{{ app.name | lower }}.urls')),
+    {% endfor %}
+    url(r'^$', index),
+    {% endif %}
+    ]

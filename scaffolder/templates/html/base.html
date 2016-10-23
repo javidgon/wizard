@@ -1,0 +1,17 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CRUD Wizard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The next .less file only works out in Development (as long as the less.min.js is imported) -->
+    <link rel="stylesheet/less" type="text/css" href="{% static "less/styles.less" %}" />
+    <!-- The next SCRIPT should be removed in Production. It's only intended for Development -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.7.1/less.min.js"></script>
+</head>
+<body>
+{% block content %}
+{% endblock %}
+</body>
+</html>

@@ -8,7 +8,7 @@ from .forms import UserForm
 
 
 def index(request):
-    return render(request, 'root.html')
+    return render(request, 'main.html')
 
 
 def login(request):

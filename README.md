@@ -149,8 +149,10 @@ As we saw in the first section, it's possible to generate the models (and the fu
 ## 5) TODO
 
 * Support proper `pluralization` in jinja2 templates
+* Change jinja2 templates interpolation braces
 * Improve frontend page (make it nicer)
 * Add tests to the resulting Backend project
+* Add HTML forms to the resulting Django Backend
 * Add automatic Token creation when a User is created
 * Add Automatic generation for 'choices' parameters
 
